@@ -2,6 +2,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
 
+
 class NotificationService {
   static final FlutterLocalNotificationsPlugin _notifications =
   FlutterLocalNotificationsPlugin();
@@ -23,12 +24,24 @@ class NotificationService {
 
     await androidPlugin?.requestNotificationsPermission();
 
+    const NotificationDetails(
+      android: AndroidNotificationDetails(
+        'task_reminder_channel_v2',
+        'Task Reminder',
+        channelDescription: 'Task notifications',
+        importance: Importance.max,
+        priority: Priority.high,
+        playSound: true,
+        sound: RawResourceAndroidNotificationSound('task_reminder'),
+      ),
+    );
+
     await androidPlugin?.createNotificationChannel(
       const AndroidNotificationChannel(
-        'task_channel',
-        'Task Reminder',
-        description: 'Task notifications',
-        importance: Importance.max,
+        'focus_timer_channel',
+        'Focus Timer',
+        description: 'Shows the running FocusFlow timer',
+        importance: Importance.low,
       ),
     );
     tz.initializeTimeZones();
@@ -67,11 +80,13 @@ class NotificationService {
       scheduledDate,
       const NotificationDetails(
         android: AndroidNotificationDetails(
-          'task_channel',
+          'task_reminder_channel_v2',
           'Task Reminder',
           channelDescription: 'Task notifications',
           importance: Importance.max,
           priority: Priority.high,
+          playSound: true,
+          sound: RawResourceAndroidNotificationSound('task_reminder'),
         ),
       ),
       androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
@@ -89,11 +104,13 @@ class NotificationService {
       'Test notification',
       const NotificationDetails(
         android: AndroidNotificationDetails(
-          'task_channel',
+          'task_reminder_channel_v2',
           'Task Reminder',
           channelDescription: 'Task notifications',
           importance: Importance.max,
           priority: Priority.high,
+          playSound: true,
+          sound: RawResourceAndroidNotificationSound('task_reminder'),
         ),
       ),
     );
@@ -121,4 +138,34 @@ class NotificationService {
   static Future<void> cancelAll() async {
     await _notifications.cancelAll();
   }
+
+  static Future<void> showFocusTimerNotification({
+    required String title,
+    required String timeRemaining,
+  }) async {
+    await _notifications.show(
+      1001,
+      title,
+      '$timeRemaining remaining',
+      const NotificationDetails(
+        android: AndroidNotificationDetails(
+          'focus_timer_channel',
+          'Focus Timer',
+          channelDescription: 'Shows the running FocusFlow timer',
+          importance: Importance.low,
+          priority: Priority.low,
+          ongoing: true,
+          autoCancel: false,
+          onlyAlertOnce: true,
+          showWhen: false,
+          category: AndroidNotificationCategory.progress,
+        ),
+      ),
+    );
+  }
+
+  static Future<void> cancelFocusTimerNotification() async {
+    await _notifications.cancel(1001);
+  }
+
 }

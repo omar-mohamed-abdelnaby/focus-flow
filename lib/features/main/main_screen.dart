@@ -26,6 +26,19 @@ class _MainScreenState extends State<MainScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final screens = [
+      HomeScreen(
+        onProfileTap: () {
+          setState(() {
+            currentIndex = 4;
+          });
+        },
+      ),
+      const TasksScreen(),
+      const FocusScreen(),
+      const StatisticsScreen(),
+      const SettingsScreen(),
+    ];
     return Scaffold(
       body: screens[currentIndex],
 

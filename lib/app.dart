@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:focus_flow/core/theme/app_theme.dart';
 import 'package:focus_flow/features/splash/splash_screen.dart';
+import 'package:provider/provider.dart';
+import 'package:focus_flow/core/theme/theme_provider.dart';
 
 class FocusFlowApp extends StatelessWidget {
   const FocusFlowApp({super.key});
@@ -13,7 +15,7 @@ class FocusFlowApp extends StatelessWidget {
 
       theme: AppTheme.lightTheme,
       darkTheme: AppTheme.darkTheme,
-      themeMode: ThemeMode.system,
+      themeMode: context.watch<ThemeNotifier>().themeMode,
 
       home: const SplashScreen(),
     );

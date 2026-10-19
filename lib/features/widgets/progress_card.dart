@@ -19,6 +19,10 @@ class ProgressCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: const Color(0xFF4F46E5),
         borderRadius: BorderRadius.circular(20),
+        border: Border.all(
+          color: Colors.white.withOpacity(0.10),
+          width: 1,
+        ),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

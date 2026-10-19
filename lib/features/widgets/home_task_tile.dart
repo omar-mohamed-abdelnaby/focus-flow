@@ -15,29 +15,44 @@ class HomeTaskTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return InkWell(
       onLongPress: onTap,
       borderRadius: BorderRadius.circular(15),
-
       child: Container(
         margin: const EdgeInsets.only(bottom: 12),
-
         decoration: BoxDecoration(
-          color: const Color(0xff1E293B),
+          color: scheme.surface,
           borderRadius: BorderRadius.circular(15),
+          border: Border.all(
+            color: isDark
+                ? Colors.white.withOpacity(0.10)
+                : Theme.of(context).dividerColor,
+            width: 1,
+          ),
+          boxShadow: isDark
+              ? []
+              : [
+            BoxShadow(
+              color: Colors.black.withOpacity(.05),
+              blurRadius: 8,
+              offset: const Offset(0, 3),
+            ),
+          ],
         ),
-
         child: CheckboxListTile(
           value: task.isCompleted,
-
           onChanged: onChanged,
-
-          activeColor: Colors.green,
+          activeColor: Theme.of(context).colorScheme.primary,
+          checkColor: Colors.white,
 
           title: Text(
             task.title,
             style: TextStyle(
-              color: Colors.white,
+              color: scheme.onSurface,
+              fontWeight: FontWeight.w500,
               decoration: task.isCompleted
                   ? TextDecoration.lineThrough
                   : TextDecoration.none,

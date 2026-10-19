@@ -43,3 +43,12 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+# VS Code settings (optional)
+.vscode/
+
+# Local Android properties
+android/local.properties
+
+# Generated Hive files (احتفظ بها فقط إذا كنت بتولدها تلقائياً)
+ *.g.dart

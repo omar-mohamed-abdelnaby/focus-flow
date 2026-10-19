@@ -18,7 +18,8 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
 
-    Future.delayed(const Duration(seconds: 2), () {
+    // يفضل زيادة الوقت قليلاً (مثلاً 2.5 ثانية) لكي تكتمل الحركات بسلاسة قبل الانتقال
+    Future.delayed(const Duration(milliseconds: 2500), () {
       if (!mounted) return;
 
       final userBox = Hive.box<UserModel>('user');
@@ -27,7 +28,7 @@ class _SplashScreenState extends State<SplashScreen> {
         context,
         MaterialPageRoute(
           builder: (_) =>
-              userBox.isEmpty ? const WelcomeScreen() : const MainScreen(),
+          userBox.isEmpty ? const WelcomeScreen() : const MainScreen(),
         ),
       );
     });
@@ -35,30 +36,63 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // استدعاء الـ ColorScheme لضمان التوافق مع الوضعين الفاتح والداكن
+    final scheme = Theme.of(context).colorScheme;
+
     return Scaffold(
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(
-              Icons.track_changes,
-              size: 90,
-              color: Color(0xff4F46E5),
-            ).animate().fade(duration: 800.ms).scale(),
+            // تحسين شكل الأيقونة بوضعها داخل دائرة شفافة بلون الـ Primary
+            Container(
+              padding: const EdgeInsets.all(24),
+              decoration: BoxDecoration(
+                color: scheme.primary.withOpacity(0.1),
+                shape: BoxShape.circle,
+              ),
+              child: Icon(
+                Icons.track_changes_rounded, // استخدام النسخة الدائرية (rounded) لشكل أحدث
+                size: 80,
+                color: scheme.primary,
+              ),
+            )
+                .animate()
+                .fade(duration: 800.ms, curve: Curves.easeOut)
+                .scale(begin: const Offset(0.5, 0.5), curve: Curves.easeOutBack), // إضافة تأثير ارتداد خفيف (Back)
 
-            const SizedBox(height: 20),
+            const SizedBox(height: 24),
 
-            const Text(
+            // تحسين تنسيق العنوان (Font Weight & Letter Spacing)
+            Text(
               "FocusFlow",
-              style: TextStyle(fontSize: 34, fontWeight: FontWeight.bold),
-            ).animate().fade(delay: 400.ms),
+              style: TextStyle(
+                fontSize: 36,
+                fontWeight: FontWeight.w800,
+                letterSpacing: 1.2,
+                color: scheme.onSurface, // يتغير حسب الثيم (أبيض في الداكن، أسود في الفاتح)
+              ),
+            )
+                .animate()
+                .fade(delay: 400.ms, duration: 600.ms)
+                .slideY(begin: 0.2, end: 0, curve: Curves.easeOut), // إضافة تأثير انزلاق من الأسفل
 
-            const SizedBox(height: 10),
+            const SizedBox(height: 12),
 
-            const Text(
+            // تحسين تنسيق النص الفرعي
+            Text(
               "Stay Focused. Stay Productive.",
-              style: TextStyle(fontSize: 16, color: Colors.grey),
-            ).animate().fade(delay: 700.ms),
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w500,
+                color: scheme.onSurface.withOpacity(0.6), // استخدام شفافية بدلاً من لون رمادي ثابت
+                letterSpacing: 0.5,
+              ),
+            )
+                .animate()
+                .fade(delay: 700.ms, duration: 600.ms)
+                .slideY(begin: 0.2, end: 0, curve: Curves.easeOut),
           ],
         ),
       ),
